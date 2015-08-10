@@ -1,0 +1,202 @@
+﻿
+@model Workflow.Models.Client
+
+@{
+    ViewBag.Title = "Listes des clients";
+}
+
+<h2>Liste des clients</h2>
+
+<p>
+   
+    <a href="#" id="create"> create</a>
+
+</p>
+<div id="liste">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Liste de clients</div>
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.clientName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.clientPhone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.clientEmail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.clientAddress)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (Workflow.Models.Client item in ViewBag.clients)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.clientName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.clientPhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.clientEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.clientAddress)
+                    </td>
+                    <td>
+
+
+                        <a href="#" id="@item.Id" class="editer">Editer</a> |
+                        <a href="#" id="@item.Id" class="details">Details</a> |
+                        <a href="#" id="@item.Id" class="delete">Supprimer</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+        </div>
+        </div>
+    
+        <div id="creer" class="form-horizontal" style="visibility:hidden">
+            <h4>Client</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.clientName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.clientName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.clientName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.clientPhone, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.clientPhone, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.clientPhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.clientEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.clientEmail, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.clientEmail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.clientAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.clientAddress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.clientAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <input type="hidden" id="id" value="0" />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" id="save" value="create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#create").click(function () {
+                    /*$("#liste").attr("visible", false);
+                    $("#creer").attr("visible", true);*/
+                    document.getElementById("liste").style.visibility = "hidden";
+                    document.getElementById("creer").style.visibility = "visible";
+
+                });
+                $("#save").click(function () {
+                    $.ajax("http://localhost:2200/api/Clients", {
+                        type: "POST",
+                        data: {
+                            id: $("#id").val(),
+                            clientName: $("#clientName").val(),
+                            clientPhone: $("#clientPhone").val(),
+                            clientEmail: $("#clientEmail").val(),
+                            clientAddress: $("#clientAddress").val(),
+                        },
+                        success: function (resultat, statut) {
+                            alert("enregistrement effectuee");
+                        },
+                        error: function (resultat, statut, erreur) {
+                            alert("enregistrement echec");
+                        },
+                        complete: function () {
+                            document.getElementById("liste").style.visibility = "visible";
+                            document.getElementById("creer").style.visibility = "hidden";
+                        }
+                    });
+                });
+                $(".delete").click(function () {
+                    var idclient = $(this).attr("id");
+                    alert(idclient);
+                    $.ajax("http://localhost:2200/api/Clients", {
+                        //url: '@Url.Action("Delete")',
+                        type: "DELETE",
+                        data: {
+                            id: idclient
+                        },
+                        success: function (resultat, statut) {
+                            alert(resultat);
+                            console.log(resultat);
+                        },
+                        error: function (resultat, statut, erreur) {
+                            alert("Une erreur s'est produite: " + erreur);
+                        },
+                        complete: function () {
+
+                        }
+                    });
+                });
+
+                /*$(".editer").click(function () {
+                    document.getElementById("liste").style.visibility = "hidden";
+                    document.getElementById("details").style.visibility = "visible";
+                });*/
+
+                $(".editer").click(function () {
+                    var idclient = $(this).attr("id");
+                    console.log('idclient=' + idclient);
+                    $.ajax("http://localhost:2200/api/Clients",
+                        {
+                            type: "GET",
+                            data: {
+                                id: idclient,
+                            },
+                            success: function (resultat) {
+                                document.getElementById("creer").style.visibility = "visible";
+                                id: $("#id").val(resultat.Id);
+                                clientName: $("#clientName").val(resultat.clientName);
+                                clientPhone: $("#clientPhone").val(resultat.clientPhone);
+                                clientEmail: $("#clientEmail").val(resultat.clientEmail);
+                                clientAddress: $("#clientAddress").val(resultat.clientAddress);
+
+
+                            },
+                            error: function (response) {
+                                alert(response.statut + '' + response.statusText);
+                            },
+                            complete: function () {
+                                alert("termine");
+                            }
+
+                        });
+
+                });
+
+            })
+
+        </script>

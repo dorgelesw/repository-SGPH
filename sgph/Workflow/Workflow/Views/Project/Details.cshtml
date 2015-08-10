@@ -1,0 +1,66 @@
+﻿@model Workflow.Models.Project
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.clientName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.clientName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.userName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.userName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectRefNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectRefNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectOwner)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectOwner)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectResponsible)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectResponsible)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

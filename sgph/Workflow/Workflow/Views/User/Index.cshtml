@@ -1,0 +1,233 @@
+﻿@model Workflow.Models.User
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a href="#" id="create"> create</a>
+</p>
+<div id="liste">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Liste des Utilisateurs</div>
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.userName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.userRole)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.userPhone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.userEmail)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (Workflow.Models.User item in ViewBag.users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.userName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.userRole)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.userPhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.userEmail)
+                    </td>
+                    <td>
+                        <a href="#" id="@item.Id" class="editer">Editer</a> |
+                        <a href="#" id="@item.Id" class="details">Details</a> |
+                        <a href="#" id="@item.Id" class="delete">Supprimer</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+        </div>
+        </>
+<div id="creer" class="form-horizontal" style="visibility:hidden">
+
+    <h4>User</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.userName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.userName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.userName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.userRole, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.userRole, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.userRole, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.userPhone, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.userPhone, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.userPhone, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.userEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.userEmail, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.userEmail, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" id="save" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+
+
+<div id="del" style="visibility:hidden">
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.userName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.userRole)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userRole)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.userPhone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userPhone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.userEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userEmail)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#create").click(function () {
+            /*$("#liste").attr("visible", false);
+            $("#creer").attr("visible", true);*/
+            document.getElementById("liste").style.visibility = "hidden";
+            document.getElementById("creer").style.visibility = "visible";
+
+        });
+
+        $("#save").click(function () {
+            $.ajax("http://localhost:2200/api/Users", {
+                type: "POST",
+                data: {
+                    id: $("#id").val(),
+                    userName: $("#userName").val(),
+                    userRole: $("#userRole").val(),
+                    userPhone: $("#userPhone").val(),
+                    userEmail: $("#userEmail").val(),
+                },
+                success: function (resultat, statut) {
+                    alert("enregistrement effectuee");
+                },
+                error: function (resultat, statut, erreur) {
+                    alert("enregistrement echec");
+                },
+                complete: function () {
+                    document.getElementById("liste").style.visibility = "visible";
+                    document.getElementById("creer").style.visibility = "hidden";
+                }
+            });
+        });
+        $(".delete").click(function (event) {
+            document.getElementById("creer").style.visibility = "hidden";
+            document.getElementById("liste").style.visibility = "hidden";
+            document.getElementById("del").style.visibility = "visible";
+                var idasupprimer = $(this).attr("id");
+                $.ajax("http://localhost:2200/api/Users", {
+                    url:'@Url.Action("Delete")',
+                    type: "POST",
+                    data: "{id:'" + idasupprimer + "'}",
+                    complete:function(){
+                        $("tr:has(input:checked)").remove();
+                    },
+                    async: "true",
+ 
+
+                });
+        });
+
+        $(".editer").click(function () {
+            var iduser = $(this).attr("id");
+
+            console.log('iduser=' + iduser);
+            $.ajax("http://localhost:2200/api/Users",
+                {
+                    type: "GET",
+                    data: {
+                        id: iduser,
+                    },
+                    success: function (resultat) {
+                        document.getElementById("creer").style.visibility = "visible";
+                        id: $("#id").val(resultat.Id);
+                        userName: $("#userName").val(resultat.userName);
+                        userRole: $("#userRole").val(resultat.userRole);
+                        userPhone: $("#userPhone").val(resultat.userPhone);
+                        userEmail: $("#userEmail").val(resultat.userEmail);
+
+
+                    },
+                    error: function (response) {
+                        alert(response.statut + '' + response.statusText);
+                    },
+                    complete: function () {
+                        alert("termine");
+                    }
+
+                });
+        });
+    })
+</script>
+}

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Workflow.Models.Client>
+
+@{
+    ViewBag.Title = "Listes des clients";
+}
+
+<h2>Liste des clients</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+    <a href="#"class="Create New">Create</a>
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.clientName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.clientPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.clientEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.clientAddress)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.clientName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.clientPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.clientEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.clientAddress)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            
+            <a href="#" id="@item.Id" class="delete">Supprimer</a>
+        </td>
+    </tr>
+}
+
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".delete").click(function () {
+            var idclient = $(this).attr("id");
+            alert(idclient);
+            $.ajax("http://localhost:2200/api/Clients", {
+                type: "POST",
+                data: {
+                    id: 0,
+                    clientName: "Franklin",
+                    clientPhone: "2376",
+                    clientEmail: "franklinovic@gmail",
+                    clientAddress: "Biyem assi"
+                },
+                success: function (resultat, statut) {
+                    alert(resultat);
+                },
+                error: function (resultat, statut, erreur) {
+                    alert("Une erreur s'est produite: " + erreur);
+                },
+                complete: function () {
+                    alert("execution terminée");
+                }
+            });
+        });
+        });
+
+</script>
