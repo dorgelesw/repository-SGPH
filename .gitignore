@@ -194,3 +194,10 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+#Customize P7C project
+sgph/Workflow/*.sln
+sgph/Workflow/App_Start
+sgph/Workflow/bin
+sgph/Workflow/obj
+
