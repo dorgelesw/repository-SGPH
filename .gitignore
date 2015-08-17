@@ -134,21 +134,23 @@ publish/
 *.pubxml
 *.publishproj
 
-# NuGet Packages
-*.nupkg
+# NuGet Packages (modify by Dorgeles)
+#*.nupkg
+
 # The packages folder can be ignored because of Package Restore
-**/packages/*
+#**/packages/*
 # except build/, which is used as an MSBuild target.
-!**/packages/build/
+#!**/packages/build/
+
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/packages/repositories.config
 
 # Windows Azure Build Output
 csx/
-*.build.csdef
+#*.build.csdef
 
 # Windows Store app package directory
-AppPackages/
+#AppPackages/
 
 # Others
 *.[Cc]ache
@@ -194,3 +196,10 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+#Customize P7C project
+sgph/Workflow/*.sln
+sgph/Workflow/App_Start
+sgph/Workflow/bin
+sgph/Workflow/obj
+
