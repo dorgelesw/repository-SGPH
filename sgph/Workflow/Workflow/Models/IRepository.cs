@@ -13,8 +13,9 @@ namespace Workflow.Models
         User deleteUser(int userId);
 
         IEnumerable<Project> Projects { get; }
-        Task<int> saveProject(Project project);
+        int saveProject(Project project);
         Project deleteProject(int projectId);
+        Project findProject(int id);
 
         IEnumerable<Client> Clients { get; }
         Task<int> saveClient(Client client);

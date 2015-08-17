@@ -4,12 +4,18 @@
     ViewBag.Title = "Liste des projets";
 }
 
-<p>
+@*<p>
     <a href="#" id="creer">create</a>
-</p>
+</p>*@
 
 <h2>Liste des projets</h2>
-
+<p>
+    @Html.ActionLink("Create New Project", "Create")
+</p>
+@if (ViewBag.statut != "")
+{
+    <div class="alert alert-info"><p>@ViewBag.statut</p></div>
+}
 
 <div id="liste">
 <div class="panel panel-primary">
@@ -32,11 +38,13 @@
                 <td>@project.User.userName</td>
 
                 <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = project.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = project.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = project.Id })
 
-
-                    <a href="#" id="ed" class="editer">Editer</a> |
+                    @*<a href="#" id="ed" class="editer">Editer</a> |
                     <a href="#" id="det" class="details">Details</a> |
-                    <a href="#" id="del" class="delete">Supprimer</a>
+                    <a href="#" id="del" class="delete">Supprimer</a>*@
                 </td>
             </tr>
         }
@@ -45,3 +53,7 @@
     </div>
 
 
+@*<p>
+    @Html.ActionLink("Client List", "Index", "Client") |
+    @Html.ActionLink("User List", "Index", "User")
+</p>*@

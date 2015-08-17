@@ -12,35 +12,36 @@ namespace Workflow.Controllers
     public class ProjectController : Controller
     {
         private IRepository repository;
-        private ProjectDbContext context = new ProjectDbContext();
+        //private ProjectDbContext context = new ProjectDbContext();
 
         public ProjectController()
         {
             repository = new WorkflowRepository();
         }
 
-        public ActionResult Details(int? Id)
-        {
-            if (Id == null)
-            {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
-            }
-            Project us = context.Projects.Find(Id);
-            if (us == null)
-            {
-                return HttpNotFound();
-            }
-            return View(us);
+        //public ActionResult Details(int? Id)
+        //{
+        //    if (Id == null)
+        //    {
+        //        return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+        //    }
+        //    Project us = context.Projects.Find(Id);
+        //    if (us == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(us);
+        //}
 
-
-        }
         // GET: /Project/
         public ActionResult Index()
         {
+            ViewBag.statut = "";
             return View(repository.Projects);
         }
 
         //GEt:/project/
+          [HttpGet]
         public ActionResult Create()
         {
             ViewBag.clients = repository.Clients;
@@ -49,16 +50,15 @@ namespace Workflow.Controllers
 
         }
 
-        //Post:/Home/project
-    [HttpPost]
-        public ActionResult Create(Project projects)
+        [HttpPost]
+        public ActionResult Create(Project project)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    context.Projects.Add(projects);
-                    context.SaveChanges();
+                    repository.saveProject(project);
+                    ViewBag.statut = "Project " + project.projectName + " created";
                     return RedirectToAction("Index");
                 }
 
@@ -67,11 +67,53 @@ namespace Workflow.Controllers
             {
               
             }
-            return View(projects);
+            return View("Index", repository.Projects);
 
         }
 
+        [HttpGet]
+        public ActionResult Details(int id = 0)
+        {
+            Project project = repository.findProject(id);
+            if (project == null)
+            {
+                return HttpNotFound("Project Not Found");
+            }
+            return View(project);
+        }
 
+        [HttpGet]
+        public ActionResult Edit(int id = 0)
+        {
+            Project project = repository.findProject(id);
+            if (project == null)
+            {
+                return HttpNotFound("Project Not Found");
+            }
+            ViewBag.clients = repository.Clients;
+            ViewBag.users = repository.Users;
+            return View(project);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Project project)
+        {
+            repository.saveProject(project);
+            ViewBag.statut = "Project " + project.projectName + " updated";
+            return View("Index", repository.Projects);
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id = 0)
+        {
+            Project project = repository.deleteProject(id);
+            if (project == null)
+            {
+                return HttpNotFound("Project Not Found");
+            }
+            ViewBag.statut = "Project " + project.projectName + " deleted";
+            return View("Index", repository.Projects);
+        }
    
     }
 }

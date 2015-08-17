@@ -46,20 +46,43 @@ namespace Workflow.Models
             return leUser;
         }
 
-        public  IEnumerable<Project> Projects {
-            get {
-
+        public IEnumerable<Project> Projects
+        {
+            get
+            {
                 IEnumerable<Project> projets = context.Projects;
-                List<Project> liste = new List<Project>();
-                foreach(var p in projets){
+
+                foreach (var p in projets)
+                {
                     p.User = context.Users.Find(p.UserId);
                     p.Client = context.Clients.Find(p.ClientId);
-                    liste.Add(p);
                 }
-                return projets; 
+                return projets;
             }
         }
-        public Task<int> saveProject(Project project)
+
+        //public Task<int> saveProject(Project project)
+        //{
+        //    if (project.Id == 0)
+        //    {
+        //        context.Projects.Add(project);
+        //    }
+        //    else
+        //    {
+        //        Project leprojet = context.Projects.Find(project.Id);
+        //        if (leprojet != null)
+        //        {
+        //            leprojet.projectName = project.projectName;
+        //            leprojet.projectOwner = project.projectOwner;
+        //            leprojet.projectRefNum = project.projectRefNum;
+        //            leprojet.projectResponsible = project.projectResponsible;
+        //        }
+        //    }
+        //    return context.SaveChangesAsync();
+        //}
+
+        //alternative function from Dorgeles because previous produce a bug
+        public int saveProject(Project project)
         {
             if (project.Id == 0)
             {
@@ -67,28 +90,53 @@ namespace Workflow.Models
             }
             else
             {
-                Project leprojet = context.Projects.Find(project.Id);
-                if (leprojet != null)
+                Project leProject = context.Projects.Find(project.Id);
+                if (leProject != null)
                 {
-                    leprojet.projectName = project.projectName;
-                    leprojet.projectOwner = project.projectOwner;
-                    leprojet.projectRefNum = project.projectRefNum;
-                    leprojet.projectResponsible = project.projectResponsible;
+                    leProject.projectName = project.projectName;
+                    leProject.projectOwner = project.projectOwner;
+                    leProject.projectRefNum = project.projectRefNum;
+                    leProject.projectResponsible = project.projectResponsible;
                 }
             }
-            return context.SaveChangesAsync();
+            return context.SaveChanges();
         }
-        public Project deleteProject(int projectId)
-        {
-            Project p = context.Projects.Find(projectId);
-            if (p != null)
-            {
-                context.Projects.Remove(p);
-            }
-            context.SaveChangesAsync();
 
-            return p;
+        //public Project deleteProject(int projectId)
+        //{
+        //    Project p = context.Projects.Find(projectId);
+        //    if (p != null)
+        //    {
+        //        context.Projects.Remove(p);
+        //    }
+        //    context.SaveChangesAsync();
+
+        //    return p;
+        //}
+
+        //alternative function from Dorgeles because previous produce a bug
+        public Project deleteProject(int ProjectId)
+        {
+            Project leProject = context.Projects.Find(ProjectId);
+            if (leProject != null)
+            {
+                context.Projects.Remove(leProject);
+                context.SaveChanges();
+            }
+            return leProject;
         }
+
+        public Project findProject(int projectID)
+        {
+            Project project = context.Projects.Find(projectID);
+            if (project != null)
+            {
+                project.Client = context.Clients.Find(project.ClientId);
+                project.User = context.Users.Find(project.UserId);
+            }
+            return project;
+        }
+
         public IEnumerable<Client> Clients {
             get { return context.Clients; }
         }
